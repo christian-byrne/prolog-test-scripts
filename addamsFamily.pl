@@ -8,9 +8,6 @@ parent(gomez,pugsley).
 parent(gomez,wednesday).
 parent(morticia,pugsley).
 parent(morticia,wednesday).
-parent(super, grandmama).
-
-
 
 % Grandparent Rule %
 
