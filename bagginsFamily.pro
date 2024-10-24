@@ -121,7 +121,9 @@ married(filibert,poppy).
 married(peony,milo).
 married(griffo,daisy).
 
-
+/* -------------------------------------------------------------------------- */
+/*                                 predicates                                 */
+/* -------------------------------------------------------------------------- */
 
 spouse(Husband, Wife) :-
     married(Husband, Wife);
@@ -184,4 +186,218 @@ fatherInLaw(X, Y) :-
 greatAunt(X, Y) :-
   grandDaughter(Y, Gp),
   sister(Gp, X).
-  
+
+% X is the secondCousin of Y
+secondCousin(X, Y) :-
+  parent(P1, X),
+  parent(P2, Y),
+  cousin(P1, P2).
+
+% X is the descendant of Y
+descendant(X, Y) :-
+  parent(Y, X);
+  parent(Z, X),
+  descendant(Z, Y).
+
+% X and Y are part of the same generation (i.e., the same level of the family tree)
+depth(Person, Ancestor, Depth) :-
+    parent(Ancestor, Person),
+    Depth is 1.
+depth(Person, Ancestor, Depth) :-
+    parent(Parent, Person),
+    depth(Parent, Ancestor, Depth1),
+    Depth is Depth1 + 1.
+ commonAncestor(X, Y, Ancestor) :-
+    descendant(X, Ancestor),
+    descendant(Y, Ancestor).
+sameGeneration(X, Y) :-
+    X = Y;
+    spouse(X, Y);
+    commonAncestor(X, Y, Ancestor),
+    depth(X, Ancestor, DepthX),
+    depth(Y, Ancestor, DepthY),
+    DepthX =:= DepthY.
+
+
+% REFERENCE: https://thainsbook.minastirith.cz/images/baggins-tree.gif
+
+/* ----------------------- spouse - should return true ---------------------- */
+
+:- (spouse(balbo, berylla) 
+    -> format('Test passed: spouse(~w, ~w)\n', [balbo, berylla])
+    ;  format('Test failed: spouse(~w, ~w) should return true\n', [balbo, berylla])).
+
+:- (spouse(mungo, laura) 
+    -> format('Test passed: spouse(~w, ~w)\n', [mungo, laura])
+    ;  format('Test failed: spouse(~w, ~w) should return true\n', [mungo, laura])).
+
+:- (spouse(largo, tanta) 
+    -> format('Test passed: spouse(~w, ~w)\n', [largo, tanta])
+    ;  format('Test failed: spouse(~w, ~w) should return true\n', [largo, tanta])).
+
+% Reversed order
+:- (spouse(berylla, balbo) 
+    -> format('Test passed: spouse(~w, ~w)\n', [berylla, balbo])
+    ;  format('Test failed: spouse(~w, ~w) should return true\n', [berylla, balbo])).
+
+:- (spouse(laura, mungo) 
+    -> format('Test passed: spouse(~w, ~w)\n', [laura, mungo])
+    ;  format('Test failed: spouse(~w, ~w) should return true\n', [laura, mungo])).
+
+:- (spouse(mimosa, ponto) 
+    -> format('Test passed: spouse(~w, ~w)\n', [mimosa, ponto])
+    ;  format('Test failed: spouse(~w, ~w) should return true\n', [mimosa, ponto])).
+
+/* ---------------------- spouse - should return false) --------------------- */
+
+:- (\+ spouse(balbo, laura) 
+    -> format('Test passed: spouse(~w, ~w)\n', [balbo, laura])
+    ;  format('Test failed: spouse(~w, ~w) should return false\n', [balbo, laura])).
+
+:- (\+ spouse(mungo, pansy) 
+    -> format('Test passed: spouse(~w, ~w)\n', [mungo, pansy])
+    ;  format('Test failed: spouse(~w, ~w) should return false\n', [mungo, pansy])).
+
+:- (\+ spouse(bingo, ruby) 
+    -> format('Test passed: spouse(~w, ~w)\n', [bingo, ruby])
+    ;  format('Test failed: spouse(~w, ~w) should return false\n', [bingo, ruby])).
+
+/* --------------------- descendant - should return true -------------------- */
+
+:- (descendant(frodo, balbo) 
+    -> format('Test passed: descendant(~w, ~w)\n', [frodo, balbo])
+    ;  format('Test failed: descendant(~w, ~w) should return true\n', [frodo, balbo])).
+
+:- (descendant(bilbo, mungo) 
+    -> format('Test passed: descendant(~w, ~w)\n', [bilbo, mungo])
+    ;  format('Test failed: descendant(~w, ~w) should return true\n', [bilbo, mungo])).
+
+:- (descendant(otho, longo) 
+    -> format('Test passed: descendant(~w, ~w)\n', [otho, longo])
+    ;  format('Test failed: descendant(~w, ~w) should return true\n', [otho, longo])).
+
+:- (descendant(bilbo, laura) 
+    -> format('Test passed: descendant(~w, ~w)\n', [bilbo, laura])
+    ;  format('Test failed: descendant(~w, ~w) should return true\n', [bilbo, laura])).
+
+:- (descendant(bilbo, mungo) 
+    -> format('Test passed: descendant(~w, ~w)\n', [bilbo, mungo])
+    ;  format('Test failed: descendant(~w, ~w) should return true\n', [bilbo, mungo])).
+
+/* -------------------- descendant - should return false -------------------- */
+
+:- (\+ descendant(balbo, frodo) 
+    -> format('Test passed: descendant(~w, ~w)\n', [balbo, frodo])
+    ;  format('Test failed: descendant(~w, ~w) should return false\n', [balbo, frodo])).
+
+:- (\+ descendant(pansy, bilbo) 
+    -> format('Test passed: descendant(~w, ~w)\n', [pansy, bilbo])
+    ;  format('Test failed: descendant(~w, ~w) should return false\n', [pansy, bilbo])).
+
+:- (\+ descendant(ruby, otho) 
+    -> format('Test passed: descendant(~w, ~w)\n', [ruby, otho])
+    ;  format('Test failed: descendant(~w, ~w) should return false\n', [ruby, otho])).
+
+% X is not a descendant of uncle
+:- (\+ descendant(daisy, drogo) 
+    -> format('Test passed: descendant(~w, ~w)\n', [daisy, drogo])
+    ;  format('Test failed: descendant(~w, ~w) should return false (X is not a descendant of X\'s cousin\n', [daisy, drogo])).
+
+% X is not a descendant of cousin
+:- (\+ descendant(rudigar, camellia) 
+    -> format('Test passed: descendant(~w, ~w)\n', [rudigar, camellia])
+    ;  format('Test failed: descendant(~w, ~w) should return false (X is not a descendant of X\'s uncle\n', [rudigar, camellia])).
+
+% X is not a descendant of sibling
+:- (\+ descendant(ponto, porto) 
+    -> format('Test passed: descendant(~w, ~w)\n', [ponto, porto])
+    ;  format('Test failed: descendant(~w, ~w) should return false (X is not a descendant of X\'s sibling\n', [ponto, porto])).
+
+/* -------------------- secondCousin - should return true ------------------- */
+
+:- (secondCousin(bilbo, dora) 
+    -> format('Test passed: secondCousin(~w, ~w)\n', [bilbo, dora])
+    ;  format('Test failed: secondCousin(~w, ~w) should return true\n', [bilbo, dora])).
+
+:- (secondCousin(posco, dora) 
+    -> format('Test passed: secondCousin(~w, ~w)\n', [posco, dora])
+    ;  format('Test failed: secondCousin(~w, ~w) should return true\n', [posco, dora])).
+
+:- (secondCousin(posco, otho) 
+    -> format('Test passed: secondCousin(~w, ~w)\n', [posco, otho])
+    ;  format('Test failed: secondCousin(~w, ~w) should return true\n', [posco, otho])).
+
+/* ------------------- secondCousin - should return false ------------------- */
+
+:- (\+ secondCousin(ponto, polo) 
+    -> format('Test passed: secondCousin(~w, ~w)\n', [ponto, polo])
+    ;  format('Test failed: secondCousin(~w, ~w) should return false\n', [ponto, polo])).
+
+:- (\+ secondCousin(mimosa, otho) 
+    -> format('Test passed: secondCousin(~w, ~w)\n', [mimosa, otho])
+    ;  format('Test failed: secondCousin(~w, ~w) should return false\n', [mimosa, otho])).
+
+:- (\+ secondCousin(fosco, ruby) 
+    -> format('Test passed: secondCousin(~w, ~w)\n', [fosco, ruby])
+    ;  format('Test failed: secondCousin(~w, ~w) should return false\n', [fosco, ruby])).
+
+
+/* ------------------- sameGeneration - should return true ------------------ */
+
+:- (sameGeneration(bilbo, otho) 
+    -> format('Test passed: sameGeneration(~w, ~w)\n', [bilbo, otho])
+    ;  format('Test failed: sameGeneration(~w, ~w) should return true\n', [bilbo, otho])).
+
+:- (sameGeneration(dora, falco) 
+    -> format('Test passed: sameGeneration(~w, ~w)\n', [dora, falco])
+    ;  format('Test failed: sameGeneration(~w, ~w) should return true\n', [dora, falco])).
+
+:- (sameGeneration(largo, ponto) 
+    -> format('Test passed: sameGeneration(~w, ~w)\n', [largo, ponto])
+    ;  format('Test failed: sameGeneration(~w, ~w) should return true\n', [largo, ponto])).
+
+:- (sameGeneration(fosco, linda) 
+    -> format('Test passed: sameGeneration(~w, ~w)\n', [fosco, linda])
+    ;  format('Test failed: sameGeneration(~w, ~w) should return true\n', [fosco, linda])).
+
+% X is same generation as self
+:- (sameGeneration(fosco, fosco) 
+    -> format('Test passed: sameGeneration(~w, ~w)\n', [fosco, fosco])
+    ;  format('Test failed: sameGeneration(~w, ~w) should return true\n', [fosco, fosco])).
+
+% X is same generation as self (highest generation)
+:- (sameGeneration(berylla, berylla) 
+    -> format('Test passed: sameGeneration(~w, ~w)\n', [berylla, berylla])
+    ;  format('Test failed: sameGeneration(~w, ~w) should return true\n', [berylla, berylla])).
+
+% X is same generation as spouse (highest generation)
+:- (sameGeneration(balbo, berylla) 
+    -> format('Test passed: sameGeneration(~w, ~w)\n', [balbo, berylla])
+    ;  format('Test failed: sameGeneration(~w, ~w) should return true\n', [balbo, berylla])).
+
+% X is same generation as spouse (highest generation) (reversed)
+:- (sameGeneration(berylla, balbo) 
+    -> format('Test passed: sameGeneration(~w, ~w)\n', [berylla, balbo])
+    ;  format('Test failed: sameGeneration(~w, ~w) should return true\n', [berylla, balbo])).
+
+/* ------------------ sameGeneration - should return false ------------------ */
+
+% child of cousin (one lower)
+:- (\+ sameGeneration(bilbo, lotho) 
+    -> format('Test passed: sameGeneration(~w, ~w)\n', [bilbo, lotho])
+    ;  format('Test failed: sameGeneration(~w, ~w) should return false\n', [bilbo, lotho])).
+
+% one lower, far removed
+:- (\+ sameGeneration(bilbo, frodo) 
+    -> format('Test passed: sameGeneration(~w, ~w)\n', [bilbo, frodo])
+    ;  format('Test failed: sameGeneration(~w, ~w) should return false\n', [bilbo, frodo])).
+
+% aunt (one higher)
+:- (\+ sameGeneration(bilbo, chica) 
+    -> format('Test passed: sameGeneration(~w, ~w)\n', [bilbo, chica])
+    ;  format('Test failed: sameGeneration(~w, ~w) should return false\n', [bilbo, chica])).
+
+% sister of grandparent (two higher)
+:- (\+ sameGeneration(bilbo, pansy) 
+    -> format('Test passed: sameGeneration(~w, ~w)\n', [bilbo, pansy])
+    ;  format('Test failed: sameGeneration(~w, ~w) should return false\n', [bilbo, pansy])).
