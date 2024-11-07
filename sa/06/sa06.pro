@@ -164,8 +164,10 @@ follows(ali, anna).
 follows(zahra, anna).
 
 /**
- * ancestralLine(L): L is a list of people making up a direct line through parentage
- * EXAMPLES:
+ * ancestralLine(L): L is a list of people making up a direct line through 
+ * parentage
+ * 
+ * Example Queries:
  * ?- ancestralLine([frodo|T]).
  * T = [] ;
  * T = [drogo] ;
@@ -194,11 +196,12 @@ ancestralLine([Child | L]) :-
   L = [Parent | NewL].
 
 /**
- * friendGroup(N,G): G is a group of N people who are all friends with each other. 
+ * friendGroup(N,G): G is a group of N people who are all friends with each 
+ * other. 
  * 
  * You can use the friend facts from SA #5 for testing
  * 
- * EXAMPLES:
+ * Example Query:
  * ?- friendGroup(3,X).
  * X = [deshawn, anna, ali] ;
  * X = [deshawn, ali, anna] ;
@@ -224,35 +227,33 @@ allFriends([P | G]) :-
   allFriends(G).
 
 /**
- *  Question 3.
- * Implement a predicate everyOtherOne(X,Y) where X and Y are lists Y contains every
- * other element in X.
+ * everyOtherOne(X,Y): X and Y are lists and Y contains every other 
+ * element in X.
+ * 
  * Example Queries:
  * ?- everyOtherOne([1,2,3,4],X).
  * X = [1, 3].
  * ?- everyOtherOne([1,2,3,4,5],X).
  * X = [1, 3, 5]
  */
-hasEveryOtherOne([_], _).
-hasEveryOtherOne([], _).
+everyOtherOne([], []).
+everyOtherOne([X], [X]).
+everyOtherOne([X1, _ | TX], [Y1 | TY]) :-
+  Y1 = X1,
+  everyOtherOne(TX, TY).
 
-everyOtherOne(L1, L2) :-
-  isHalfSize(L1, L2),
-  hasEveryOtherOne(L1, L2).
-
-hasEveryOtherOne([_, E2 | L1], L2) :-
-  member(E2, L2),
-  everyOtherOne(L1, L2).
-  % length(L1, Len1),
-  % length(L2, Len2),
-  % Len1 > Len2,
-
-isHalfSize(L1, L2) :-
-  length(L1, Len1),
-  length(L2, Len2),
-  Len1 is Len2 * 2.
-
-
-
-
+/**
+ * removeDuplicates(X,Y): X and Y are lists and Y is X with all the 
+ * duplicates removed. Do not use sort.
+ *
+ * Example Query:
+ * ?- removeDuplicates([1,0,2,0,3,3,6,0,4],X).
+ * X = [1,2,3,6,0,4]
+ */
+removeDuplicates([],[]).
+removeDuplicates([XH | XT], [YH | YT]) :-
+  % Pop X until X's head is not a dup.
+  (member(XH, XT), removeDuplicates(XT, [YH | YT])) ;
+  % Assert heads are equal and proceed.
+  (XH = YH, removeDuplicates(XT, YT)).
 
