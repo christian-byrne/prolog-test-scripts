@@ -3,6 +3,9 @@
   - [Upwards Paths that must Terminate at Root `Node > Parent > ... > Root`](#upwards-paths-that-must-terminate-at-root-node--parent----root)
   - [Downards Paths `Node > Child > ...`](#downards-paths-node--child--)
   - [Downwards Paths that must Terminate at Leaf `Node > Child > ... > Leaf`](#downwards-paths-that-must-terminate-at-leaf-node--child----leaf)
+- [List Operations](#list-operations)
+  - [Concatenating Lists](#concatenating-lists)
+  - [Reversing Lists](#reversing-lists)
 
 
 # Creating Tree-Path Lists
@@ -69,5 +72,22 @@ downwardPath([Parent | T]) :-
   T = [Node | NewT].
 ```
 
+# List Operations
 
+## Concatenating Lists
 
+```prolog
+concatList([], [], []).
+concatList([], [Head | Tail], [Head | Tail]).
+concatList([Head | Tail], List, [Head | ConcatedTail]) :-
+  concatList(Tail, List, ConcatedTail).
+```
+
+## Reversing Lists
+
+```prolog
+reverseList([], []).
+reverseList([Head | Tail], Reversed) :-
+  reverseList(Tail, ReversedTail),
+  concatList(ReversedTail, [Head], Reversed).
+```

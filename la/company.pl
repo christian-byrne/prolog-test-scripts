@@ -38,6 +38,3 @@ manager(hans, jack).
 
 
 
-
-
-
