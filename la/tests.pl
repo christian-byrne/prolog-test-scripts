@@ -453,6 +453,330 @@ test(insertN_into_longer_list, [true(Result == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])]
 /*                                   sudoku                                   */
 /* -------------------------------------------------------------------------- */
 
+:- begin_tests(sudoku).
+
+% sample queries from project spec
+
+test(sudoku_with_4_uninstantiated_sublists, [true]) :-
+  fullPlacement([Ones, Twos, Threes, Fours]),
+  length(Ones, 4),
+  length(Twos, 4),
+  length(Threes, 4),
+  length(Fours, 4).
+
+
+% a solution with minimal information to be deterministic
+
+test(sudoku_correctly_places_single_item_in_solution11, [true]) :-
+  fullPlacement([[OneOne, TwoThree, ThreeFour, FourTwo], [1/2, TwoFour, 3/3, FourOne], [1/3, 2/1, 3/2, 4/4], [1/4, 2/2, 3/1, 4/3]]),
+  OneOne = 1/1,
+  TwoThree = 2/3,
+  TwoFour = 2/4,
+  ThreeFour = 3/4,
+  FourOne = 4/1,
+  FourTwo = 4/2.
+
+% auto-generated solutions, broken down into cases with different uninstantiated variables
+
+/* ------------------------------- Solution1-2 ------------------------------ */
+
+test(sudoku_true_on_valid_solution1, [true]) :-
+  fullPlacement([[1/1, 2/3, 3/4, 4/2], [1/3, 2/2, 3/1, 4/4], [1/4, 2/1, 3/2, 4/3], [1/2, 2/4, 3/3, 4/1]]).
+
+test(sudoku_true_on_valid_solution2, [true]) :-
+  fullPlacement([[1/1, 2/3, 3/4, 4/2], [1/2, 2/4, 3/1, 4/3], [1/3, 2/1, 3/2, 4/4], [1/4, 2/2, 3/3, 4/1]]).
+
+test(sudoku_true_on_valid_solution4, [true]) :-
+  fullPlacement([[1/1, 2/3, 3/4, 4/2], [1/2, 2/4, 3/3, 4/1], [1/3, 2/1, 3/2, 4/4], [1/4, 2/2, 3/1, 4/3]]).
+
+test(sudoku_true_on_valid_solution4, [true]) :-
+  fullPlacement([[1/1, 2/3, 3/4, 4/2], [1/2, 2/4, 3/3, 4/1], [1/3, 2/1, 3/2, 4/4], [1/4, 2/2, 3/1, 4/3]]).
+
+/* ------------------------------- Solution 3 ------------------------------- */
+
+test(sudoku_true_on_valid_solution3, [true]) :-
+  fullPlacement([[1/1, 2/3, 3/4, 4/2], [1/2, 2/4, 3/3, 4/1], [1/3, 2/1, 3/2, 4/4], [1/4, 2/2, 3/1, 4/3]]).
+
+test(sudoku_correctly_places_ones_in_solution3, [true(subset([1/1, 2/3, 3/4, 4/2], Result))]) :-
+  fullPlacement([Result, [1/2, 2/4, 3/3, 4/1], [1/3, 2/1, 3/2, 4/4], [1/4, 2/2, 3/1, 4/3]]).
+
+test(sudoku_correctly_places_twos_in_solution3, [true(subset([1/2, 2/4, 3/3, 4/1], Result))]) :-
+  fullPlacement([[1/1, 2/3, 3/4, 4/2], Result, [1/3, 2/1, 3/2, 4/4], [1/4, 2/2, 3/1, 4/3]]).
+
+test(sudoku_correctly_places_threes_in_solution3, [true(subset([1/3, 2/1, 3/2, 4/4], Result))]) :-
+  fullPlacement([[1/1, 2/3, 3/4, 4/2], [1/2, 2/4, 3/3, 4/1], Result, [1/4, 2/2, 3/1, 4/3]]).
+
+test(sudoku_correctly_places_fours_in_solution3, [true(subset([1/4, 2/2, 3/1, 4/3], Result))]) :-
+  fullPlacement([[1/1, 2/3, 3/4, 4/2], [1/2, 2/4, 3/3, 4/1], [1/3, 2/1, 3/2, 4/4], Result]).
+
+test(sudoku_correctly_places_single_item_in_solution3, [true(Result == 3/2)]) :-
+  fullPlacement([[1/1, 2/3, 3/4, 4/2], [1/2, 2/4, 3/3, 4/1], [1/3, 2/1, Result, 4/4], [1/4, 2/2, 3/1, 4/3]]).
+
+test(sudoku_correctly_places_single_item_in_solution2, [true(Result == 4/1)]) :-
+  fullPlacement([[1/1, 2/3, 3/4, 4/2], [1/2, 2/4, 3/3, Result], [1/3, 2/1, 3/2, 4/4], [1/4, 2/2, 3/1, 4/3]]).
+
+test(sudoku_correctly_places_single_item_in_solution1, [true(Result == 1/1)]) :-
+  fullPlacement([[Result, 2/3, 3/4, 4/2], [1/2, 2/4, 3/3, 4/1], [1/3, 2/1, 3/2, 4/4], [1/4, 2/2, 3/1, 4/3]]).
+
+test(sudoku_correctly_places_single_item_in_solution2, [true(Result == 3/3)]) :-
+  fullPlacement([[1/1, 2/3, 3/4, 4/2], [1/2, 2/4, Result, 4/1], [1/3, 2/1, 3/2, 4/4], [1/4, 2/2, 3/1, 4/3]]).
+
+test(sudoku_correctly_fills_ones_and_twos_in_solution3, [true(subset([1/2,2/4,3/3,4/1], Result2))]) :-
+  fullPlacement([_, Result2, [1/3, 2/1, 3/2, 4/4], [1/4, 2/2, 3/1, 4/3]]).
+
+test(sudoku_correctly_fills_ones_and_twos_in_solution3a, [true(subset([1/1, 2/3, 3/4, 4/2], Result1))]) :-
+  fullPlacement([Result1, _, [1/3, 2/1, 3/2, 4/4], [1/4, 2/2, 3/1, 4/3]]).
+
+/* ------------------------------- Solution 4 ------------------------------- */
+
+test(sudoku_true_on_valid_solution4, [true]) :-
+  fullPlacement([[1/1, 2/4, 3/2, 4/3], [1/2, 2/3, 3/1, 4/4], [1/3, 2/1, 3/4, 4/2], [1/4, 2/2, 3/3, 4/1]]).
+
+test(sudoku_correctly_places_ones_in_solution4, [true(subset([1/1, 2/4, 3/2, 4/3], Result))]) :-
+  fullPlacement([Result, [1/2, 2/3, 3/1, 4/4], [1/3, 2/1, 3/4, 4/2], [1/4, 2/2, 3/3, 4/1]]).
+
+test(sudoku_correctly_places_twos_in_solution4, [true(subset([1/2, 2/3, 3/1, 4/4], Result))]) :-
+  fullPlacement([[1/1, 2/4, 3/2, 4/3], Result, [1/3, 2/1, 3/4, 4/2], [1/4, 2/2, 3/3, 4/1]]).
+
+test(sudoku_correctly_places_threes_in_solution4, [true(subset([1/3, 2/1, 3/4, 4/2], Result))]) :-
+  fullPlacement([[1/1, 2/4, 3/2, 4/3], [1/2, 2/3, 3/1, 4/4], Result, [1/4, 2/2, 3/3, 4/1]]).
+
+test(sudoku_correctly_places_fours_in_solution4, [true(subset([1/4, 2/2, 3/3, 4/1], Result))]) :-
+  fullPlacement([[1/1, 2/4, 3/2, 4/3], [1/2, 2/3, 3/1, 4/4], [1/3, 2/1, 3/4, 4/2], Result]).
+
+test(sudoku_correctly_places_single_item_in_solution1, [true(Result == 2/4)]) :-
+  fullPlacement([[1/1, Result, 3/2, 4/3], [1/2, 2/3, 3/1, 4/4], [1/3, 2/1, 3/4, 4/2], [1/4, 2/2, 3/3, 4/1]]).
+
+test(sudoku_correctly_places_single_item_in_solution3, [true(Result == 3/4)]) :-
+  fullPlacement([[1/1, 2/4, 3/2, 4/3], [1/2, 2/3, 3/1, 4/4], [1/3, 2/1, Result, 4/2], [1/4, 2/2, 3/3, 4/1]]).
+
+test(sudoku_correctly_places_single_item_in_solution1, [true(Result == 1/1)]) :-
+  fullPlacement([[Result, 2/4, 3/2, 4/3], [1/2, 2/3, 3/1, 4/4], [1/3, 2/1, 3/4, 4/2], [1/4, 2/2, 3/3, 4/1]]).
+
+test(sudoku_correctly_places_single_item_in_solution4, [true(Result == 4/1)]) :-
+  fullPlacement([[1/1, 2/4, 3/2, 4/3], [1/2, 2/3, 3/1, 4/4], [1/3, 2/1, 3/4, 4/2], [1/4, 2/2, 3/3, Result]]).
+
+/* ------------------------------- Solution 5 ------------------------------- */
+
+test(sudoku_true_on_valid_solution5, [true]) :-
+  fullPlacement([[1/4, 2/1, 3/3, 4/2], [1/2, 2/4, 3/1, 4/3], [1/3, 2/2, 3/4, 4/1], [1/1, 2/3, 3/2, 4/4]]).
+
+test(sudoku_correctly_places_ones_in_solution5, [true(subset([1/4, 2/1, 3/3, 4/2], Result))]) :-
+  fullPlacement([Result, [1/2, 2/4, 3/1, 4/3], [1/3, 2/2, 3/4, 4/1], [1/1, 2/3, 3/2, 4/4]]).
+
+test(sudoku_correctly_places_twos_in_solution5, [true(subset([1/2, 2/4, 3/1, 4/3], Result))]) :-
+  fullPlacement([[1/4, 2/1, 3/3, 4/2], Result, [1/3, 2/2, 3/4, 4/1], [1/1, 2/3, 3/2, 4/4]]).
+
+test(sudoku_correctly_places_threes_in_solution5, [true(subset([1/3, 2/2, 3/4, 4/1], Result))]) :-
+  fullPlacement([[1/4, 2/1, 3/3, 4/2], [1/2, 2/4, 3/1, 4/3], Result, [1/1, 2/3, 3/2, 4/4]]).
+
+test(sudoku_correctly_places_fours_in_solution5, [true(subset([1/1, 2/3, 3/2, 4/4], Result))]) :-
+  fullPlacement([[1/4, 2/1, 3/3, 4/2], [1/2, 2/4, 3/1, 4/3], [1/3, 2/2, 3/4, 4/1], Result]).
+
+test(sudoku_correctly_places_single_item_in_solution3, [true(Result == 3/4)]) :-
+  fullPlacement([[1/4, 2/1, 3/3, 4/2], [1/2, 2/4, 3/1, 4/3], [1/3, 2/2, Result, 4/1], [1/1, 2/3, 3/2, 4/4]]).
+
+test(sudoku_correctly_places_single_item_in_solution3, [true(Result == 2/2)]) :-
+  fullPlacement([[1/4, 2/1, 3/3, 4/2], [1/2, 2/4, 3/1, 4/3], [1/3, Result, 3/4, 4/1], [1/1, 2/3, 3/2, 4/4]]).
+
+test(sudoku_correctly_places_single_item_in_solution4, [true(Result == 2/3)]) :-
+  fullPlacement([[1/4, 2/1, 3/3, 4/2], [1/2, 2/4, 3/1, 4/3], [1/3, 2/2, 3/4, 4/1], [1/1, Result, 3/2, 4/4]]).
+
+test(sudoku_correctly_places_single_item_in_solution1, [true(Result == 4/2)]) :-
+  fullPlacement([[1/4, 2/1, 3/3, Result], [1/2, 2/4, 3/1, 4/3], [1/3, 2/2, 3/4, 4/1], [1/1, 2/3, 3/2, 4/4]]).
+
+
+
+/* ------------------------------- Solution 6 ------------------------------- */
+
+test(sudoku_true_on_valid_solution2, [true]) :-
+  fullPlacement([[1/4, 2/1, 3/2, 4/3], [1/1, 2/4, 3/3, 4/2], [1/2, 2/3, 3/4, 4/1], [1/3, 2/2, 3/1, 4/4]]).
+
+test(sudoku_correctly_places_ones_in_solution2, [true(subset([1/4, 2/1, 3/2, 4/3], Result))]) :-
+  fullPlacement([Result, [1/1, 2/4, 3/3, 4/2], [1/2, 2/3, 3/4, 4/1], [1/3, 2/2, 3/1, 4/4]]).
+
+test(sudoku_correctly_places_twos_in_solution2, [true(subset([1/1, 2/4, 3/3, 4/2], Result))]) :-
+  fullPlacement([[1/4, 2/1, 3/2, 4/3], Result, [1/2, 2/3, 3/4, 4/1], [1/3, 2/2, 3/1, 4/4]]).
+
+test(sudoku_correctly_places_threes_in_solution2, [true(subset([1/2, 2/3, 3/4, 4/1], Result))]) :-
+  fullPlacement([[1/4, 2/1, 3/2, 4/3], [1/1, 2/4, 3/3, 4/2], Result, [1/3, 2/2, 3/1, 4/4]]).
+
+test(sudoku_correctly_places_fours_in_solution2, [true(subset([1/3, 2/2, 3/1, 4/4], Result))]) :-
+  fullPlacement([[1/4, 2/1, 3/2, 4/3], [1/1, 2/4, 3/3, 4/2], [1/2, 2/3, 3/4, 4/1], Result]).
+
+test(sudoku_correctly_places_single_item_in_solution4, [true(Result == 2/2)]) :-
+  fullPlacement([[1/4, 2/1, 3/2, 4/3], [1/1, 2/4, 3/3, 4/2], [1/2, 2/3, 3/4, 4/1], [1/3, Result, 3/1, 4/4]]).
+
+test(sudoku_correctly_places_single_item_in_solution3, [true(Result == 1/2)]) :-
+  fullPlacement([[1/4, 2/1, 3/2, 4/3], [1/1, 2/4, 3/3, 4/2], [Result, 2/3, 3/4, 4/1], [1/3, 2/2, 3/1, 4/4]]).
+
+test(sudoku_correctly_places_single_item_in_solution4, [true(Result == 2/2)]) :-
+  fullPlacement([[1/4, 2/1, 3/2, 4/3], [1/1, 2/4, 3/3, 4/2], [1/2, 2/3, 3/4, 4/1], [1/3, Result, 3/1, 4/4]]).
+
+test(sudoku_correctly_places_single_item_in_solution4, [true(Result == 2/2)]) :-
+  fullPlacement([[1/4, 2/1, 3/2, 4/3], [1/1, 2/4, 3/3, 4/2], [1/2, 2/3, 3/4, 4/1], [1/3, Result, 3/1, 4/4]]).
+
+/* ------------------------------- Solution 7 ------------------------------- */
+
+test(sudoku_true_on_valid_solution7, [true]) :-
+  fullPlacement([[1/4, 2/1, 3/3, 4/2], [1/1, 2/4, 3/2, 4/3], [1/2, 2/3, 3/4, 4/1], [1/3, 2/2, 3/1, 4/4]]).
+
+test(sudoku_correctly_places_ones_in_solution7, [true(subset([1/4, 2/1, 3/3, 4/2], Result))]) :-
+  fullPlacement([Result, [1/1, 2/4, 3/2, 4/3], [1/2, 2/3, 3/4, 4/1], [1/3, 2/2, 3/1, 4/4]]).
+
+test(sudoku_correctly_places_twos_in_solution7, [true(subset([1/1, 2/4, 3/2, 4/3], Result))]) :-
+  fullPlacement([[1/4, 2/1, 3/3, 4/2], Result, [1/2, 2/3, 3/4, 4/1], [1/3, 2/2, 3/1, 4/4]]).
+
+test(sudoku_correctly_places_threes_in_solution7, [true(subset([1/2, 2/3, 3/4, 4/1], Result))]) :-
+  fullPlacement([[1/4, 2/1, 3/3, 4/2], [1/1, 2/4, 3/2, 4/3], Result, [1/3, 2/2, 3/1, 4/4]]).
+
+test(sudoku_correctly_places_fours_in_solution7, [true(subset([1/3, 2/2, 3/1, 4/4], Result))]) :-
+  fullPlacement([[1/4, 2/1, 3/3, 4/2], [1/1, 2/4, 3/2, 4/3], [1/2, 2/3, 3/4, 4/1], Result]).
+
+test(sudoku_correctly_places_single_item_in_solution7, [true(Result == 1/1)]) :-
+  fullPlacement([[1/4, 2/1, 3/3, 4/2], [Result, 2/4, 3/2, 4/3], [1/2, 2/3, 3/4, 4/1], [1/3, 2/2, 3/1, 4/4]]).
+
+test(sudoku_correctly_places_single_item_in_solution7, [true(Result == 1/2)]) :-
+  fullPlacement([[1/4, 2/1, 3/3, 4/2], [1/1, 2/4, 3/2, 4/3], [Result, 2/3, 3/4, 4/1], [1/3, 2/2, 3/1, 4/4]]).
+
+test(sudoku_correctly_places_single_item_in_solution7, [true(Result == 3/4)]) :-
+  fullPlacement([[1/4, 2/1, 3/3, 4/2], [1/1, 2/4, 3/2, 4/3], [1/2, 2/3, Result, 4/1], [1/3, 2/2, 3/1, 4/4]]).
+
+test(sudoku_correctly_places_single_item_in_solution7, [true(Result == 4/3)]) :-
+  fullPlacement([[1/4, 2/1, 3/3, 4/2], [1/1, 2/4, 3/2, Result], [1/2, 2/3, 3/4, 4/1], [1/3, 2/2, 3/1, 4/4]]).
+
+/* ------------------------------- Solution 8 ------------------------------- */
+
+test(sudoku_true_on_valid_solution8, [true]) :-
+  fullPlacement([[1/2, 2/4, 3/1, 4/3], [1/1, 2/3, 3/2, 4/4], [1/3, 2/2, 3/4, 4/1], [1/4, 2/1, 3/3, 4/2]]).
+
+test(sudoku_correctly_places_ones_in_solution8, [true(subset([1/2, 2/4, 3/1, 4/3], Result))]) :-
+  fullPlacement([Result, [1/1, 2/3, 3/2, 4/4], [1/3, 2/2, 3/4, 4/1], [1/4, 2/1, 3/3, 4/2]]).
+
+test(sudoku_correctly_places_twos_in_solution8, [true(subset([1/1, 2/3, 3/2, 4/4], Result))]) :-
+  fullPlacement([[1/2, 2/4, 3/1, 4/3], Result, [1/3, 2/2, 3/4, 4/1], [1/4, 2/1, 3/3, 4/2]]).
+
+test(sudoku_correctly_places_threes_in_solution8, [true(subset([1/3, 2/2, 3/4, 4/1], Result))]) :-
+  fullPlacement([[1/2, 2/4, 3/1, 4/3], [1/1, 2/3, 3/2, 4/4], Result, [1/4, 2/1, 3/3, 4/2]]).
+
+test(sudoku_correctly_places_fours_in_solution8, [true(subset([1/4, 2/1, 3/3, 4/2], Result))]) :-
+  fullPlacement([[1/2, 2/4, 3/1, 4/3], [1/1, 2/3, 3/2, 4/4], [1/3, 2/2, 3/4, 4/1], Result]).
+
+test(sudoku_correctly_places_single_item_in_solution8, [true(Result == 3/4)]) :-
+  fullPlacement([[1/2, 2/4, 3/1, 4/3], [1/1, 2/3, 3/2, 4/4], [1/3, 2/2, Result, 4/1], [1/4, 2/1, 3/3, 4/2]]).
+
+test(sudoku_correctly_places_single_item_in_solution8, [true(Result == 1/3)]) :-
+  fullPlacement([[1/2, 2/4, 3/1, 4/3], [1/1, 2/3, 3/2, 4/4], [Result, 2/2, 3/4, 4/1], [1/4, 2/1, 3/3, 4/2]]).
+
+test(sudoku_correctly_places_single_item_in_solution8, [true(Result == 4/4)]) :-
+  fullPlacement([[1/2, 2/4, 3/1, 4/3], [1/1, 2/3, 3/2, Result], [1/3, 2/2, 3/4, 4/1], [1/4, 2/1, 3/3, 4/2]]).
+
+test(sudoku_correctly_places_single_item_in_solution8, [true(Result == 4/4)]) :-
+  fullPlacement([[1/2, 2/4, 3/1, 4/3], [1/1, 2/3, 3/2, Result], [1/3, 2/2, 3/4, 4/1], [1/4, 2/1, 3/3, 4/2]]).
+
+/* -------- test if can return values when very few are instantiated -------- */
+% MIGHT ONLY WORK WITH ONE IMPL. -- need to make it use subset to be generalized
+
+% test(sudoku_correctly_places_single_item_in_solution1, [true(Result1 == 4/2, Result2 == 1/2, Result3 == 2/4, Result4 == 3/1, Result5 == 4/3, Result6 == 1/3, Result7 == 2/2, Result8 == 3/4, Result9 == 4/1, Result10 == 1/1, Result11 == 2/3, Result12 == 3/2, Result13 == 4/4)]) :-
+%   fullPlacement([[1/4, 2/1, 3/3, Result], [Result1, Result2, Result3, Result4], [Result5, Result6, Result7, Result8], [Result9, Result10, Result11, Result12]]).
+
+% test(sudoku_correctly_places_single_item_in_solution1, [true(Result1 == 4/2, Result2 == 1/2, Result3 == 2/4, Result4 == 3/1, Result5 == 4/3, Result6 == 1/3, Result7 == 2/2, Result8 == 3/4, Result9 == 4/1, Result10 == 1/1, Result11 == 2/3, Result12 == 3/2, Result13 == 4/4)]) :-
+%   fullPlacement([[1/4, Y, X, Result], [Result1, Result2, Result3, Result4], [Result5, Result6, Result7, Result8], [Result9, Result10, Result11, Result12]]).
+
+% test(sudoku_correctly_places_single_item_in_solution1, [true(Result1 == 4/2, Result2 == 1/2, Result3 == 2/4, Result4 == 3/1, Result5 == 4/3, Result6 == 1/3, Result7 == 2/2, Result8 == 3/4, Result9 == 4/1, Result10 == 1/1, Result11 == 2/3, Result12 == 3/2, Result13 == 4/4)]) :-
+%   fullPlacement([[1/4, Y, 3/3, Result], [Result1, Result2, Result3, Result4], [Result5, Result6, Result7, Result8], [Result9, Result10, Result11, Result12]]).
+
+% test(sudoku_correctly_places_single_item_in_solution1, [true(Result1 == 4/2, Result2 == 1/2, Result3 == 2/4, Result4 == 3/1, Result5 == 4/3, Result6 == 1/3, Result7 == 2/2, Result8 == 3/4, Result9 == 4/1, Result10 == 1/1, Result11 == 2/3, Result12 == 3/2, Result13 == 4/4)]) :-
+%   fullPlacement([[Z, Y, X, Result], [Result1, Result2, Result3, Result4], [Result5, Result6, Result7, Result8], [Result9, Result10, Result11, Result12]]).
+
+/* ------------------------------- Solution 9 ------------------------------- */
+
+test(sudoku_true_on_valid_solution9, [true]) :-
+  fullPlacement([[1/4, 2/1, 3/2, 4/3], [1/2, 2/3, 3/1, 4/4], [1/3, 2/2, 3/4, 4/1], [1/1, 2/4, 3/3, 4/2]]).
+
+test(sudoku_correctly_places_ones_in_solution9, [true(subset([1/4, 2/1, 3/2, 4/3], Result))]) :-
+  fullPlacement([Result, [1/2, 2/3, 3/1, 4/4], [1/3, 2/2, 3/4, 4/1], [1/1, 2/4, 3/3, 4/2]]).
+
+test(sudoku_correctly_places_twos_in_solution9, [true(subset([1/2, 2/3, 3/1, 4/4], Result))]) :-
+  fullPlacement([[1/4, 2/1, 3/2, 4/3], Result, [1/3, 2/2, 3/4, 4/1], [1/1, 2/4, 3/3, 4/2]]).
+
+test(sudoku_correctly_places_threes_in_solution9, [true(subset([1/3, 2/2, 3/4, 4/1], Result))]) :-
+  fullPlacement([[1/4, 2/1, 3/2, 4/3], [1/2, 2/3, 3/1, 4/4], Result, [1/1, 2/4, 3/3, 4/2]]).
+
+test(sudoku_correctly_places_fours_in_solution9, [true(subset([1/1, 2/4, 3/3, 4/2], Result))]) :-
+  fullPlacement([[1/4, 2/1, 3/2, 4/3], [1/2, 2/3, 3/1, 4/4], [1/3, 2/2, 3/4, 4/1], Result]).
+
+test(sudoku_correctly_places_single_item_in_solution9, [true(Result == 2/2)]) :-
+  fullPlacement([[1/4, 2/1, 3/2, 4/3], [1/2, 2/3, 3/1, 4/4], [1/3, Result, 3/4, 4/1], [1/1, 2/4, 3/3, 4/2]]).
+
+test(sudoku_correctly_places_single_item_in_solution9, [true(Result == 4/2)]) :-
+  fullPlacement([[1/4, 2/1, 3/2, 4/3], [1/2, 2/3, 3/1, 4/4], [1/3, 2/2, 3/4, 4/1], [1/1, 2/4, 3/3, Result]]).
+
+test(sudoku_correctly_places_single_item_in_solution9, [true(Result == 2/2)]) :-
+  fullPlacement([[1/4, 2/1, 3/2, 4/3], [1/2, 2/3, 3/1, 4/4], [1/3, Result, 3/4, 4/1], [1/1, 2/4, 3/3, 4/2]]).
+
+test(sudoku_correctly_places_single_item_in_solution9, [true(Result == 2/2)]) :-
+  fullPlacement([[1/4, 2/1, 3/2, 4/3], [1/2, 2/3, 3/1, 4/4], [1/3, Result, 3/4, 4/1], [1/1, 2/4, 3/3, 4/2]]).
+
+/* ------------------------------- Solution 10 ------------------------------- */
+
+test(sudoku_true_on_valid_solution10, [true]) :-
+  fullPlacement([[1/2, 2/3, 3/4, 4/1], [1/3, 2/1, 3/2, 4/4], [1/1, 2/4, 3/3, 4/2], [1/4, 2/2, 3/1, 4/3]]).
+
+test(sudoku_correctly_places_ones_in_solution10, [true(subset([1/2, 2/3, 3/4, 4/1], Result))]) :-
+  fullPlacement([Result, [1/3, 2/1, 3/2, 4/4], [1/1, 2/4, 3/3, 4/2], [1/4, 2/2, 3/1, 4/3]]).
+
+test(sudoku_correctly_places_twos_in_solution10, [true(subset([1/3, 2/1, 3/2, 4/4], Result))]) :-
+  fullPlacement([[1/2, 2/3, 3/4, 4/1], Result, [1/1, 2/4, 3/3, 4/2], [1/4, 2/2, 3/1, 4/3]]).
+
+test(sudoku_correctly_places_threes_in_solution10, [true(subset([1/1, 2/4, 3/3, 4/2], Result))]) :-
+  fullPlacement([[1/2, 2/3, 3/4, 4/1], [1/3, 2/1, 3/2, 4/4], Result, [1/4, 2/2, 3/1, 4/3]]).
+
+test(sudoku_correctly_places_fours_in_solution10, [true(subset([1/4, 2/2, 3/1, 4/3], Result))]) :-
+  fullPlacement([[1/2, 2/3, 3/4, 4/1], [1/3, 2/1, 3/2, 4/4], [1/1, 2/4, 3/3, 4/2], Result]).
+
+test(sudoku_correctly_places_single_item_in_solution10, [true(Result == 1/2)]) :-
+  fullPlacement([[Result, 2/3, 3/4, 4/1], [1/3, 2/1, 3/2, 4/4], [1/1, 2/4, 3/3, 4/2], [1/4, 2/2, 3/1, 4/3]]).
+
+test(sudoku_correctly_places_single_item_in_solution10, [true(Result == 3/4)]) :-
+  fullPlacement([[1/2, 2/3, Result, 4/1], [1/3, 2/1, 3/2, 4/4], [1/1, 2/4, 3/3, 4/2], [1/4, 2/2, 3/1, 4/3]]).
+
+test(sudoku_correctly_places_single_item_in_solution10, [true(Result == 2/1)]) :-
+  fullPlacement([[1/2, 2/3, 3/4, 4/1], [1/3, Result, 3/2, 4/4], [1/1, 2/4, 3/3, 4/2], [1/4, 2/2, 3/1, 4/3]]).
+
+test(sudoku_correctly_places_single_item_in_solution10, [true(Result == 2/2)]) :-
+  fullPlacement([[1/2, 2/3, 3/4, 4/1], [1/3, 2/1, 3/2, 4/4], [1/1, 2/4, 3/3, 4/2], [1/4, Result, 3/1, 4/3]]).
+
+/* ------------------------------- Solution 11 ------------------------------- */
+
+test(sudoku_true_on_valid_solution11, [true]) :-
+  fullPlacement([[1/1, 2/3, 3/4, 4/2], [1/2, 2/4, 3/3, 4/1], [1/3, 2/1, 3/2, 4/4], [1/4, 2/2, 3/1, 4/3]]).
+
+test(sudoku_correctly_places_ones_in_solution11, [true(subset([1/1, 2/3, 3/4, 4/2], Result))]) :-
+  fullPlacement([Result, [1/2, 2/4, 3/3, 4/1], [1/3, 2/1, 3/2, 4/4], [1/4, 2/2, 3/1, 4/3]]).
+
+test(sudoku_correctly_places_twos_in_solution11, [true(subset([1/2, 2/4, 3/3, 4/1], Result))]) :-
+  fullPlacement([[1/1, 2/3, 3/4, 4/2], Result, [1/3, 2/1, 3/2, 4/4], [1/4, 2/2, 3/1, 4/3]]).
+
+test(sudoku_correctly_places_threes_in_solution11, [true(subset([1/3, 2/1, 3/2, 4/4], Result))]) :-
+  fullPlacement([[1/1, 2/3, 3/4, 4/2], [1/2, 2/4, 3/3, 4/1], Result, [1/4, 2/2, 3/1, 4/3]]).
+
+test(sudoku_correctly_places_fours_in_solution11, [true(subset([1/4, 2/2, 3/1, 4/3], Result))]) :-
+  fullPlacement([[1/1, 2/3, 3/4, 4/2], [1/2, 2/4, 3/3, 4/1], [1/3, 2/1, 3/2, 4/4], Result]).
+
+test(sudoku_correctly_places_single_item_in_solution11, [true(Result == 1/2)]) :-
+  fullPlacement([[1/1, 2/3, 3/4, 4/2], [Result, 2/4, 3/3, 4/1], [1/3, 2/1, 3/2, 4/4], [1/4, 2/2, 3/1, 4/3]]).
+
+test(sudoku_correctly_places_single_item_in_solution11, [true(Result == 2/4)]) :-
+  fullPlacement([[1/1, 2/3, 3/4, 4/2], [1/2, Result, 3/3, 4/1], [1/3, 2/1, 3/2, 4/4], [1/4, 2/2, 3/1, 4/3]]).
+
+test(sudoku_correctly_places_single_item_in_solution11, [true(Result == 3/4)]) :-
+  fullPlacement([[1/1, 2/3, Result, 4/2], [1/2, 2/4, 3/3, 4/1], [1/3, 2/1, 3/2, 4/4], [1/4, 2/2, 3/1, 4/3]]).
+
+
+:- end_tests(sudoku).
+
+
 /* -------------------------------------------------------------------------- */
 /*                            traveling salesperson                           */
 /* -------------------------------------------------------------------------- */
