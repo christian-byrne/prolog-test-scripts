@@ -80,8 +80,6 @@ chainOfCommand([Manager | T]) :-
  * X is the last element in the list Y.
  */
 
-% TODO: this returns: true ; false
-
 last(X, [X]).
 last(X, [_ | Tail]) :-
   last(X, Tail).
@@ -234,23 +232,118 @@ fullPlacement(Matrix) :-
 /* -------------------------------------------------------------------------- */
 
 
-/**
- * 7
- * merge(X, Y, Z)
- * Z is sorted list X merged with sorted list Y; do not use append or sort.
- */
+fullGraph([albany, annapolis, atlanta, austin, baton_rouge, boston]).
+
+dist(albany, annapolis, 469).
+dist(albany, atlanta, 1356).
+dist(albany, austin, 2538).
+dist(albany, baton_rouge, 2056).
+dist(albany, boston, 224).
+dist(atlanta, annapolis, 915).
+dist(atlanta, austin, 1318).
+dist(atlanta, baton_rouge, 736).
+dist(atlanta, boston, 1507).
+dist(annapolis, austin, 2168).
+dist(annapolis, baton_rouge, 1639).
+dist(annapolis, boston, 593).
+dist(austin, baton_rouge, 634).
+dist(austin, boston, 2729).
+dist(baton_rouge, boston, 2225).
+dist(tucson, atlanta, 2478).
+dist(tucson, albany, 2526).
+dist(tucson, annapolis, 3186).
+dist(tucson, baton_rouge, 1887).
+dist(tucson, boston, 3669).
+dist(tucson, austin, 1275).
+
+% tsp(G, M, C, D): C is a cycle in G that visits every city exactly once and whose total distance D is less than or equal to M
+
+distance(X, Y, D) :- dist(X, Y, D).
+distance(X, Y, D) :- dist(Y, X, D).
+
+allVisited([], _).
+allVisited([H | T], Cycle) :-
+  member(H, Cycle),
+  allVisited(T, Cycle).
+
+isClosed([_]).
+isClosed([H | T]) :-
+  last(Last, T),
+  H = Last.
+
+seenAll(Cycle, Graph) :-
+  allVisited(Graph, Cycle).
+
+totalDistance([_], 0).
+totalDistance([H1, H2 | T], Dist):-
+  distance(H1, H2, DistCur),
+  totalDistance([H2 | T], NewDist),
+  Dist is NewDist + DistCur.
+
+tsp(Graph, MaxDistance, Cycle, Distance) :-
+  fullGraph(Graph),
+  length(Graph, Len),
+  length(Cycle, LenCycle),
+  LenCycle >= Len,
+  isClosed(Cycle),
+  totalDistance(Cycle, Distance),
+  Distance =< MaxDistance,
+  seenAll(Cycle, Graph).
+
+
 
 
 /* -------------------------------------------------------------------------- */
 /*                            The K-Clique Problem                            */
 /* -------------------------------------------------------------------------- */
 
+% graph 1: unweighted
+edge(a,b,1).
+edge(a,e,1).
+edge(b,c,1).
+edge(b,g,1).
+edge(b,d,1).
+edge(b,e,1).
+edge(c,e,1).
+edge(c,d,1).
+edge(d,e,1).
+edge(d,g,1).
+edge(e,f,1).
+edge(f,g,1).
+edge(f,h,1).
 
-/**
- * 7
- * merge(X, Y, Z)
- * Z is sorted list X merged with sorted list Y; do not use append or sort.
- */
+% graph 2: unweighted
+edge(i,j,1).
+edge(i,l,1).
+edge(j,k,1).
+edge(k,l,1).
+
+% graph 3: weighted
+edge(m,n,1).
+edge(m,r,3).
+edge(n,r,4).
+edge(n,o,3).
+edge(n,q,5).
+edge(o,q,4).
+edge(o,p,1).
+edge(p,q,2).
+edge(q,r,2).
+
+graph([a,b,c,d,e,f,g,h]).
+graph([i,j,k,l]).
+graph([m,n,o,p,q,r]).
+
+isConnected([_], 0).
+isConnected([H1, H2], Size) :-
+  edge(H1, H2, Size).
+isConnected([H1, H2 | T], Size) :-
+  edge(H1, H2, Add),
+  isConnected([H2 | T], NS),
+  Size is Add + NS.
+
+kclique(Graph, Cycle, K) :-
+  graph(Graph),
+  isConnected(Cycle, K).
 
 
 /* -------------------------------------------------------------------------- */
@@ -259,11 +352,20 @@ fullPlacement(Matrix) :-
 
 
 
-/**
- * 7
- * merge(X, Y, Z)
- * Z is sorted list X merged with sorted list Y; do not use append or sort.
- */
 
+edgeBidirectional(P, Q) :- edge(P, Q, _).
+edgeBidirectional(P, Q) :- edge(Q, P, _).
 
+inOrHasNeighbor(Vertex, Graph) :- member(Vertex, Graph).
+inOrHasNeighbor(Vertex, Graph) :-
+  member(GE, Graph),
+  edgeBidirectional(GE, Vertex).
 
+isDominating(D, [HG]) :- inOrHasNeighbor(HG, D).
+isDominating(D, [HG | TG]) :-
+  inOrHasNeighbor(HG, D),
+  isDominating(D, TG).
+
+dominatingSet(Graph, DominatingS, Size) :-
+  length(DominatingS, Size),
+  isDominating(DominatingS, Graph).
