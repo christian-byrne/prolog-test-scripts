@@ -1,39 +1,3 @@
-% manager(X,Y) means "X is the manager of Y"
-% manager(alice, bob).
-% manager(alice, carla).
-% manager(alice, dave).
-% manager(alice, elsa).
-% manager(alice, frank).
-% manager(bob, george).
-% manager(bob, harry).
-% manager(bob, inez).
-% manager(bob, juan).
-% manager(bob, kevin).
-% manager(george, keeley).
-% manager(inez, leon).
-% manager(leon, manuel).
-% manager(juan, nancy).
-% manager(nancy, ophelia).
-% manager(ophelia, parker).
-% manager(kevin, quincey).
-% manager(quincey, ray).
-% manager(dave, stephen).
-% manager(dave, tracy).
-% manager(tracy, violet).
-% manager(stephen, whitney).
-% manager(stephen, xavier).
-% manager(whitney, angelica).
-% manager(violet, zeke).
-% manager(violet, betty).
-% manager(violet, candace).
-% manager(violet, donna).
-% manager(elsa, eddie).
-% manager(eddie, francine).
-% manager(eddie, ginny).
-% manager(eddie, hans).
-% manager(ginny, iris).
-% manager(hans, jack).
-
 /**
  * Test Cases LA2
  * 
@@ -47,7 +11,9 @@
  *  actual values.
  */
 
-
+:- consult(company).
+:- consult(cities).
+:- consult(graphs).
 :- consult(la2).
 
 
@@ -340,55 +306,55 @@ test(merge_nonequal_homogenous_lists, [true(Result == [1, 1, 1, 9, 9])]) :-
 % NOTE: rename `repeat` predicate to `repeatN` in order to test it
 % (`repeat` is shadowed by built-in `repeat/0` predicate)
 
-:- begin_tests(repeat).
+% :- begin_tests(repeat).
 
-% sample queries from project spec
+% % sample queries from project spec
 
-test(repeat_123_once, [true(Result == [1, 2, 3])]) :-
-  repeatN([1, 2, 3], 1, Result).
+% test(repeat_123_once, [true(Result == [1, 2, 3])]) :-
+%   repeatN([1, 2, 3], 1, Result).
 
-test(repeat_123_twice, [true(Result == [1, 2, 3, 1, 2, 3])]) :-
-  repeatN([1, 2, 3], 2, Result).
+% test(repeat_123_twice, [true(Result == [1, 2, 3, 1, 2, 3])]) :-
+%   repeatN([1, 2, 3], 2, Result).
 
-test(repeat_123_thrice, [true(Result == [1, 2, 3, 1, 2, 3, 1, 2, 3])]) :-
-  repeatN([1, 2, 3], 3, Result).
+% test(repeat_123_thrice, [true(Result == [1, 2, 3, 1, 2, 3, 1, 2, 3])]) :-
+%   repeatN([1, 2, 3], 3, Result).
 
-test(repeat_123_four_times, [true(Result == [1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3])]) :-
-  repeatN([1, 2, 3], 4, Result).
+% test(repeat_123_four_times, [true(Result == [1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3])]) :-
+%   repeatN([1, 2, 3], 4, Result).
 
-test(repeat_x_to_123123, [true(Result == [1, 2, 3])]) :-
-  repeatN(Result, 2, [1,2,3,1,2,3]).
+% test(repeat_x_to_123123, [true(Result == [1, 2, 3])]) :-
+%   repeatN(Result, 2, [1,2,3,1,2,3]).
 
-% edge cases
+% % edge cases
 
-test(repeat_empty_list_0_times, [true(Result == [])]) :-
-  repeatN([], 0, Result).
+% test(repeat_empty_list_0_times, [true(Result == [])]) :-
+%   repeatN([], 0, Result).
 
-test(repeat_empty_list_1_time, [true(Result == [])]) :-
-  repeatN([], 1, Result).
+% test(repeat_empty_list_1_time, [true(Result == [])]) :-
+%   repeatN([], 1, Result).
 
-test(repeat_empty_list, [true(Result == [])]) :-
-  repeatN([], 5, Result).
+% test(repeat_empty_list, [true(Result == [])]) :-
+%   repeatN([], 5, Result).
 
-test(repeatN_0_is_empty_list, [true(Result == [])]) :-
-  repeatN(_, 0, Result).
+% test(repeatN_0_is_empty_list, [true(Result == [])]) :-
+%   repeatN(_, 0, Result).
 
-test(repeatN_1_is_reflexive, [true(Result == [a])]) :-
-  repeatN([a], 1, Result).
+% test(repeatN_1_is_reflexive, [true(Result == [a])]) :-
+%   repeatN([a], 1, Result).
 
-test(repeatN_2_is_doubled, [true(Result == [a, a])]) :-
-  repeatN([a], 2, Result).
+% test(repeatN_2_is_doubled, [true(Result == [a, a])]) :-
+%   repeatN([a], 2, Result).
 
-test(repeatN_3_is_tripled, [true(Result == [a, a, a])]) :-
-  repeatN([a], 3, Result).
+% test(repeatN_3_is_tripled, [true(Result == [a, a, a])]) :-
+%   repeatN([a], 3, Result).
 
-test(repeatN_4_is_quadrupled, [true(Result == [a, a, a, a])]) :-
-  repeatN([a], 4, Result).
+% test(repeatN_4_is_quadrupled, [true(Result == [a, a, a, a])]) :-
+%   repeatN([a], 4, Result).
 
-test(repeatN_5_is_quintupled, [true(Result == [a, a, a, a, a])]) :-
-  repeatN([a], 5, Result).
+% test(repeatN_5_is_quintupled, [true(Result == [a, a, a, a, a])]) :-
+%   repeatN([a], 5, Result).
 
-:- end_tests(repeat).
+% :- end_tests(repeat).
 
 
 /* -------------------------------------------------------------------------- */
@@ -419,35 +385,35 @@ test(sublist_empty_list, [true(Result == [])]) :-
 % NOTE: rename `insert` predicate to `insert_` in order to test it
 % (`insert` is shadowed by built-in `insert/3` predicate)
 
-:- begin_tests(insert).
+% :- begin_tests(insert).
 
-% sample queries from project spec
+% % sample queries from project spec
 
-test(insertN_3_in_empty_list, [true(Result == [3])]) :-
-  insertN(3, [], Result).
+% test(insertN_3_in_empty_list, [true(Result == [3])]) :-
+%   insertN(3, [], Result).
 
-test(insertN_3_into_0246list, [true(Result == [0, 2, 3, 4, 6])]) :-
-  insertN(3, [0, 2, 4, 6], Result).
+% test(insertN_3_into_0246list, [true(Result == [0, 2, 3, 4, 6])]) :-
+%   insertN(3, [0, 2, 4, 6], Result).
 
-test(insertN_8_into_12388list, [true(Result == [1, 2, 3, 8, 8, 8])]) :-
-  insertN(8, [1, 2, 3, 8, 8], Result).
+% test(insertN_8_into_12388list, [true(Result == [1, 2, 3, 8, 8, 8])]) :-
+%   insertN(8, [1, 2, 3, 8, 8], Result).
 
-% edge cases
+% % edge cases
 
-test(insertN_into_empty_list, [true(Result == [1])]) :-
-  insertN(1, [], Result).
+% test(insertN_into_empty_list, [true(Result == [1])]) :-
+%   insertN(1, [], Result).
 
-test(insertN_into_singleton_list, [true(Result == [1, 2])]) :-
-  insertN(2, [1], Result).
+% test(insertN_into_singleton_list, [true(Result == [1, 2])]) :-
+%   insertN(2, [1], Result).
 
-test(insertN_into_longer_list, [true(Result == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])]) :-
-  insertN(5, [1, 2, 3, 4, 6, 7, 8, 9, 10], Result).
+% test(insertN_into_longer_list, [true(Result == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])]) :-
+%   insertN(5, [1, 2, 3, 4, 6, 7, 8, 9, 10], Result).
 
-% Probably not a case that needs to be handled
-% test(insertN_noninteger_constant, [true(Result == [1, 2, 3, a, 4, 5])]) :-
-%   insertN(a, [1, 2, 3, 4, 5], Result).
+% % Probably not a case that needs to be handled
+% % test(insertN_noninteger_constant, [true(Result == [1, 2, 3, a, 4, 5])]) :-
+% %   insertN(a, [1, 2, 3, 4, 5], Result).
 
-:- end_tests(insert).
+% :- end_tests(insert).
 
 /* -------------------------------------------------------------------------- */
 /*                                   sudoku                                   */
@@ -674,21 +640,6 @@ test(sudoku_correctly_places_single_item_in_solution8, [true(Result == 4/4)]) :-
 test(sudoku_correctly_places_single_item_in_solution8, [true(Result == 4/4)]) :-
   fullPlacement([[1/2, 2/4, 3/1, 4/3], [1/1, 2/3, 3/2, Result], [1/3, 2/2, 3/4, 4/1], [1/4, 2/1, 3/3, 4/2]]).
 
-/* -------- test if can return values when very few are instantiated -------- */
-% MIGHT ONLY WORK WITH ONE IMPL. -- need to make it use subset to be generalized
-
-% test(sudoku_correctly_places_single_item_in_solution1, [true(Result1 == 4/2, Result2 == 1/2, Result3 == 2/4, Result4 == 3/1, Result5 == 4/3, Result6 == 1/3, Result7 == 2/2, Result8 == 3/4, Result9 == 4/1, Result10 == 1/1, Result11 == 2/3, Result12 == 3/2, Result13 == 4/4)]) :-
-%   fullPlacement([[1/4, 2/1, 3/3, Result], [Result1, Result2, Result3, Result4], [Result5, Result6, Result7, Result8], [Result9, Result10, Result11, Result12]]).
-
-% test(sudoku_correctly_places_single_item_in_solution1, [true(Result1 == 4/2, Result2 == 1/2, Result3 == 2/4, Result4 == 3/1, Result5 == 4/3, Result6 == 1/3, Result7 == 2/2, Result8 == 3/4, Result9 == 4/1, Result10 == 1/1, Result11 == 2/3, Result12 == 3/2, Result13 == 4/4)]) :-
-%   fullPlacement([[1/4, Y, X, Result], [Result1, Result2, Result3, Result4], [Result5, Result6, Result7, Result8], [Result9, Result10, Result11, Result12]]).
-
-% test(sudoku_correctly_places_single_item_in_solution1, [true(Result1 == 4/2, Result2 == 1/2, Result3 == 2/4, Result4 == 3/1, Result5 == 4/3, Result6 == 1/3, Result7 == 2/2, Result8 == 3/4, Result9 == 4/1, Result10 == 1/1, Result11 == 2/3, Result12 == 3/2, Result13 == 4/4)]) :-
-%   fullPlacement([[1/4, Y, 3/3, Result], [Result1, Result2, Result3, Result4], [Result5, Result6, Result7, Result8], [Result9, Result10, Result11, Result12]]).
-
-% test(sudoku_correctly_places_single_item_in_solution1, [true(Result1 == 4/2, Result2 == 1/2, Result3 == 2/4, Result4 == 3/1, Result5 == 4/3, Result6 == 1/3, Result7 == 2/2, Result8 == 3/4, Result9 == 4/1, Result10 == 1/1, Result11 == 2/3, Result12 == 3/2, Result13 == 4/4)]) :-
-%   fullPlacement([[Z, Y, X, Result], [Result1, Result2, Result3, Result4], [Result5, Result6, Result7, Result8], [Result9, Result10, Result11, Result12]]).
-
 /* ------------------------------- Solution 9 ------------------------------- */
 
 test(sudoku_true_on_valid_solution9, [true]) :-
@@ -773,7 +724,6 @@ test(sudoku_correctly_places_single_item_in_solution11, [true(Result == 2/4)]) :
 test(sudoku_correctly_places_single_item_in_solution11, [true(Result == 3/4)]) :-
   fullPlacement([[1/1, 2/3, Result, 4/2], [1/2, 2/4, 3/3, 4/1], [1/3, 2/1, 3/2, 4/4], [1/4, 2/2, 3/1, 4/3]]).
 
-
 :- end_tests(sudoku).
 
 
@@ -781,10 +731,156 @@ test(sudoku_correctly_places_single_item_in_solution11, [true(Result == 3/4)]) :
 /*                            traveling salesperson                           */
 /* -------------------------------------------------------------------------- */
 
+
+:- begin_tests(tsp).
+
+% sample queries from project spec
+
+% ?- tsp(G, 5700, C, D).
+% G = [albany, annapolis, atlanta, austin, baton_rouge, boston],
+% C = [boston, albany, austin, baton_rouge, atlanta, annapolis, boston],
+% D = 5640 .
+
+test(tsp_spec_queries1, [true(C == 5640)]) :-
+  tsp([albany, annapolis, atlanta, austin, baton_rouge, boston], 5700, [boston, albany, austin | _], C).
+
+test(tsp_spec_queries1, [true]) :-
+  tsp([albany, annapolis, atlanta, austin, baton_rouge, boston], 5700, [boston, albany, austin, baton_rouge, atlanta, annapolis, boston], 5640).
+
+:- end_tests(tsp).
+
 /* -------------------------------------------------------------------------- */
 /*                              k-clique problem                              */
 /* -------------------------------------------------------------------------- */
 
+:- begin_tests(k_clique).
+
+% sample queries from project spec
+
+% ?- G=[a,b,c,d,e,f,g,h], kclique(G,C,4).
+% G = [a, b, c, d, e, f, g, h],
+% C = [b, c, d, e] .
+% ?- G=[a,b,c,d,e,f,g,h], kclique(G,C,3).
+% G = [a, b, c, d, e, f, g, h],
+% C = [a, b, e] .
+% ?- G=[a,b,c,d,e,f,g,h], kclique(G,C,5).
+% false.
+
+% test(k_clique_spec_queries1, [true(C == [b, c, d, e])]) :-
+%   kclique([a,b,c,d,e,f,g,h], C, 4).
+
+test(k_clique_spec_queries1, [true]) :-
+  kclique([a,b,c,d,e,f,g,h], [b,c,d,e], 4).
+
+test(k_clique_spec_queries2, [true(C == [a, b, e])]) :-
+  kclique([a,b,c,d,e,f,g,h], C, 3).
+
+test(k_clique_spec_queries3, [fail]) :-
+  kclique([a,b,c,d,e,f,g,h], _, 5).
+
+% additional tests
+
+
+:- end_tests(k_clique).
+
 /* -------------------------------------------------------------------------- */
 /*                           dominating set problem                           */
 /* -------------------------------------------------------------------------- */
+
+:- begin_tests(dominating_set).
+
+% sample queries from project spec
+
+% ?- G=[a,b,c,d,e,f,g,h], dominatingSet(G,D,2).
+% G = [a, b, c, d, e, f, g, h],
+% D = [b, f] .
+% ?- G=[a,b,c,d,e,f,g,h], dominatingSet(G,D,1).
+% false.
+% ?- G=[a,b,c,d,e,f,g,h], dominatingSet(G,D,4).
+% G = [a, b, c, d, e, f, g, h],
+% D = [a, b, c, f] .
+
+test(dominating_set_spec_queries1, [true(D == [b, f])]) :-
+  dominatingSet([a,b,c,d,e,f,g,h], D, 2).
+
+test(dominating_set_spec_queries2, [fail]) :-
+  dominatingSet([a,b,c,d,e,f,g,h], _, 1).
+
+test(dominating_set_spec_queries3, [true(D == [a, b, c, f])]) :-
+  dominatingSet([a,b,c,d,e,f,g,h], D, 4).
+
+% additional tests
+
+test(dominating_set_basic, [true]) :-
+  dominatingSet([a,b,c,d,e,f,g,h], [a, b, c, f], 4).
+
+% Sample tests provided
+test(dominating_set_1, [true]) :-
+  dominatingSet([a,b,c,d,e,f,g,h], [b, f], 2).
+
+test(dominating_set_2, [fail]) :-
+  dominatingSet([a,b,c,d,e,f,g,h], [a, b], 1).
+
+test(dominating_set_3, [true]) :-
+  dominatingSet([a,b,c,d,e,f,g,h], [a, b, c, f], 4).
+
+% New tests for graph 1
+test(dominating_set_4, [true]) :-
+  dominatingSet([a,b,c,d,e,f,g,h], [a, c, f], 3).
+
+test(dominating_set_5, [fail]) :-
+  dominatingSet([a,b,c,d,e,f,g,h], [a, g], 2).
+
+test(dominating_set_6, [fail]) :-
+  dominatingSet([a,b,c,d,e,f,g,h], [b, d], 2).
+
+% Tests for graph 2
+test(dominating_set_7, [true]) :-
+  dominatingSet([i,j,k,l], [i, k], 2).
+
+test(dominating_set_8, [fail]) :-
+  dominatingSet([i,j,k,l], [j], 1).
+
+test(dominating_set_9, [true]) :-
+  dominatingSet([i,j,k,l], [i, j, k], 3).
+
+% Tests for graph 3 (weighted)
+test(dominating_set_10, [true]) :-
+  dominatingSet([m,n,o,p,q,r], [m, o, r], 3).
+
+test(dominating_set_11, [true]) :-
+  dominatingSet([m,n,o,p,q,r], [m, p], 2).
+
+test(dominating_set_12, [true]) :-
+  dominatingSet([m,n,o,p,q,r], [m, n, p], 3).
+
+test(dominating_set_13, [true]) :-
+  dominatingSet([m,n,o,p,q,r], [n, q], 2).
+
+test(dominating_set_14, [fail]) :-
+  dominatingSet([m,n,o,p,q,r], [m, m], 2).
+
+% Edge cases
+% size too large 
+test(dominating_set_edge_case1, [fail]) :-
+  dominatingSet([a,b,c,d,e,f,g,h], [h, n, a], 2). 
+
+test(dominating_set_edge_case2, [fail]) :-
+  dominatingSet([a,b,c,d,e,f,g,h], [h, n, 3], 2). % 3 not in graph
+
+test(dominating_set_edge_case3, [fail]) :-
+  dominatingSet([a,b,c,d,e,f,g,h], [h, n, a], 5). % size too small
+
+test(dominating_set_edge_case4, [fail]) :-
+  dominatingSet([a,b,c,d,e,f,g,h], _, 0). % no set of size 0 can dominate
+
+test(dominating_set_edge_case5, [true]) :-
+  dominatingSet([a,b,c,d,e,f,g,h], [e, g, f], 3).
+
+test(dominating_set_edge_case6, [fail]) :-
+  dominatingSet([a,b,c,d,e,f,g,h], [h], 1).
+
+test(dominating_set_edge_case7, [true]) :-
+  dominatingSet([a,b,c,d,e,f,g,h], [b, e, f], 3).
+
+:- end_tests(dominating_set).

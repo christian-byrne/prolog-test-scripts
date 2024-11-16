@@ -35,6 +35,3 @@ manager(ginny, iris).
 manager(hans, jack).
 
 
-
-
-
